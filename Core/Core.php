@@ -33,21 +33,39 @@ class Core
     }
 
     /**
-     * @param  bool  $onlyWithText
      * @return array
      * @throws VKApiBlockedException
      * @throws VKApiException
      * @throws VKClientException
      */
-    private function getPosts(bool $onlyWithText = true): array
+    private function getPostsWithText(): array
     {
-        $posts = $this->vk->wall()->get(
+        $posts = $this->getPosts();
+        return array_filter($posts['items'], static fn($post) => $post['text'] !== '');
+    }
+
+    /**
+     * @return array
+     * @throws VKApiBlockedException
+     * @throws VKApiException
+     * @throws VKClientException
+     */
+    private function getPosts(): array
+    {
+        return $this->vk->wall()->get(
             $_ENV['SERVICE_KEY'],
             ['domain' => 'jumoreski', 'count' => 100, 'filter' => 'owner']
         );
-        if ($onlyWithText) {
-            return array_filter($posts['items'], static fn($post) => $post['text'] !== '');
-        }
-        return $posts;
+    }
+
+    /**
+     * @return int
+     * @throws VKApiBlockedException
+     * @throws VKApiException
+     * @throws VKClientException
+     */
+    private function getCountPosts(): int
+    {
+        return $this->getPosts()['count'];
     }
 }
