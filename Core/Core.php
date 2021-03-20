@@ -117,7 +117,7 @@ class Core
         $group = $_GET['group'] ?? 'jumoreski';
         $this->printHeader($group)
         ?>
-        <div style="margin: auto; width: fit-content">
+        <div style="margin: auto; max-width: 400px">
             <p style="white-space: pre-wrap"><?= print_r($post['text'], true) ?></p>
             <?php
             foreach ($this->getImages($post) as $url) {
