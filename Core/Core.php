@@ -97,7 +97,7 @@ class Core
     private function printHeader(string $group = ''): void
     {
         ?>
-        <h1 style="font-size: 10vh">Рандомный пост</h1>
+        <h1 style="font-size: 6vh">Рандомный пост</h1>
         <div style="font-size: 4vh">
             <form>
                 <label>
@@ -115,7 +115,7 @@ class Core
         $this->printHeader($group)
         ?>
         <div style="margin: auto; font-size: 5vh; max-width: 80%;">
-            <p style="white-space: pre-wrap"><?= print_r($post['text'], true) ?></p>
+            <p style="white-space: pre-wrap; word-wrap: break-word"><?= print_r($post['text'], true) ?></p>
             <?php
             foreach ($this->getImages($post) as $url) {
                 ?>
