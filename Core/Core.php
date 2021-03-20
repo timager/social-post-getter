@@ -118,7 +118,7 @@ class Core
         $this->printHeader($group)
         ?>
         <div style="margin: auto; width: fit-content">
-            <pre><?= print_r($post['text']) ?></pre>
+            <p style="white-space: pre-wrap"><?= print_r($post['text'], true) ?></p>
             <?php
             foreach ($this->getImages($post) as $url) {
                 ?>
