@@ -31,10 +31,10 @@ class Core
         }
     }
 
-    private function printError(Exception $e)
+    private function printError(Exception $e): void
     {
         ?>
-        <p>Выберите другой паблик, этот не сработал :(</p>
+        <p>Выберите другой источник, этот не сработал :(</p>
         <?php
     }
 
@@ -97,11 +97,11 @@ class Core
     private function printHeader(string $group = ''): void
     {
         ?>
-        <h1>Рандомный пост из паблика</h1>
+        <h1>Рандомный пост</h1>
         <div>
             <form>
                 <label>
-                    <input name="group" value="<?= $group ?>" type="text">
+                    <input placeholder="вк айди" name="group" value="<?= $group ?>" type="text">
                 </label>
                 <button>Получить новый</button>
             </form>
