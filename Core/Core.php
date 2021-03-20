@@ -26,46 +26,48 @@ class Core
     {
         $this->vk = new VKApiClient();
         try {
-            print_r(array_map(static fn($post) => $post['text'], $this->getPosts()));
+            print_r($this->getRandomPost('jumoreski')['text']);
         } catch (Exception $e) {
             print_r($e);
         }
     }
 
     /**
+     * @param  string  $group
+     * @param  int  $count
+     * @param  int  $offset
      * @return array
-     * @throws VKApiBlockedException
-     * @throws VKApiException
-     * @throws VKClientException
+     * @throws Exception
      */
-    private function getPostsWithText(): array
-    {
-        $posts = $this->getPosts();
-        return array_filter($posts['items'], static fn($post) => $post['text'] !== '');
-    }
-
-    /**
-     * @return array
-     * @throws VKApiBlockedException
-     * @throws VKApiException
-     * @throws VKClientException
-     */
-    private function getPosts(): array
+    private function getPosts(string $group, int $count = 1, int $offset = 0): array
     {
         return $this->vk->wall()->get(
             $_ENV['SERVICE_KEY'],
-            ['domain' => 'jumoreski', 'count' => 100, 'filter' => 'owner']
+            ['domain' => $group, 'count' => $count, 'offset' => $offset]
         );
     }
 
     /**
+     * @param  string  $group
      * @return int
-     * @throws VKApiBlockedException
-     * @throws VKApiException
-     * @throws VKClientException
+     * @throws Exception
      */
-    private function getCountPosts(): int
+    private function getCountPosts(string $group): int
     {
-        return $this->getPosts()['count'];
+        return $this->getPosts($group)['count'];
+    }
+
+    /**
+     * @param  string  $group
+     * @return array
+     * @throws Exception
+     */
+    private function getRandomPost(string $group): array
+    {
+        $count = $this->getCountPosts($group);
+        do {
+            $post = $this->getPosts($group, 1, random_int(0, $count - 1))['items'][0];
+        } while (empty($post['text']));
+        return $post;
     }
 }
