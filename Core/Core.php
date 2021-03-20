@@ -42,7 +42,7 @@ class Core
             $sizes = $image['photo']['sizes'];
             $maxSize = null;
             foreach ($sizes as $size){
-                if($maxSize === null || $size['width'] > $maxSize['width']){
+                if($maxSize === null || ($size['width'] > $maxSize['width'] && $size['width'] < 600)){
                     $maxSize = $size;
                 }
             }
