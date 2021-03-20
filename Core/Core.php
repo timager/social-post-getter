@@ -2,9 +2,6 @@
 
 
 use VK\Client\VKApiClient;
-use VK\Exceptions\Api\VKApiBlockedException;
-use VK\Exceptions\VKApiException;
-use VK\Exceptions\VKClientException;
 
 class Core
 {
