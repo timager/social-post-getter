@@ -91,10 +91,7 @@ class Core
     private function getRandomPost(string $group): array
     {
         $count = $this->getCountPosts($group);
-        do {
-            $post = $this->getPosts($group, 1, random_int(0, $count - 1))['items'][0];
-        } while (empty($post['text']));
-        return $post;
+        return $this->getPosts($group, 1, random_int(0, $count - 1))['items'][0];
     }
 
     private function printHeader(string $group = ''): void
