@@ -97,13 +97,13 @@ class Core
     private function printHeader(string $group = ''): void
     {
         ?>
-        <h1>Рандомный пост</h1>
-        <div>
+        <h1 style="font-size: 10vh">Рандомный пост</h1>
+        <div style="font-size: 4vh">
             <form>
                 <label>
-                    <input placeholder="вк айди" name="group" value="<?= $group ?>" type="text">
+                    <input style="font-size: 4vh;" placeholder="вк айди" name="group" value="<?= $group ?>" type="text">
                 </label>
-                <button>Получить новый</button>
+                <button style="font-size: 4vh;">Получить новый</button>
             </form>
         </div>
         <?php
@@ -114,12 +114,12 @@ class Core
         $group = $_GET['group'] ?? 'jumoreski';
         $this->printHeader($group)
         ?>
-        <div style="margin: auto; max-width: 400px">
+        <div style="margin: auto; font-size: 5vh; max-width: 80%;">
             <p style="white-space: pre-wrap"><?= print_r($post['text'], true) ?></p>
             <?php
             foreach ($this->getImages($post) as $url) {
                 ?>
-                <div><img style="width: 400px; height: auto" src="<?= $url ?>" alt="pic"/></div>
+                <div><img style="width: 60%; height: auto" src="<?= $url ?>" alt="pic"/></div>
                 <?php
             }
             ?>
