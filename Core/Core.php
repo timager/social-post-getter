@@ -1,19 +1,14 @@
 <?php
 
 
-use Symfony\Component\HttpClient\HttpClient;
-use Symfony\Component\HttpClient\RetryableHttpClient;
 use VK\Client\VKApiClient;
+use VK\Exceptions\Api\VKApiBlockedException;
+use VK\Exceptions\VKApiException;
 use VK\Exceptions\VKClientException;
-use VK\Exceptions\VKOAuthException;
-use VK\OAuth\Scopes\VKOAuthUserScope;
-use VK\OAuth\VKOAuth;
-use VK\OAuth\VKOAuthDisplay;
-use VK\OAuth\VKOAuthResponseType;
 
 class Core
 {
-    private const PUBLIC_URL = 'https://vk.com/club203419343';
+    private ?VKApiClient $vk = null;
 
     private function loadEnv(): void
     {
@@ -27,41 +22,32 @@ class Core
         $this->work();
     }
 
-    /**
-     * @return string
-     * @throws VKClientException
-     * @throws VKOAuthException
-     */
-    private function auth(): string
-    {
-        $oauth = new VKOAuth();
-        $response = $oauth->getAccessToken($_ENV['CLIENT_ID'], $_ENV['SECRET'], self::PUBLIC_URL,123);
-
-        return $response['access_token'];
-    }
-
-//    private function getBrowserUrl(): string
-//    {
-//        return (new VKOAuth())->getAuthorizeUrl(
-//            VKOAuthResponseType::CODE,
-//            self::CLIENT_ID,
-//            self::PUBLIC_URL,
-//            VKOAuthDisplay::PAGE,
-//            [VKOAuthUserScope::WALL],
-//            self::SECRET
-//        );
-//    }
-
     private function work(): void
     {
-        $vk = new VKApiClient();
-
+        $this->vk = new VKApiClient();
         try {
-            $token = $this->auth();
-            $posts = $vk->wall()->get($token, ['domain' => 'jumoreski', 'count' => 100, 'filter' => 'owner']);
-            print_r($posts);
+            print_r(array_map(static fn($post) => $post['text'], $this->getPosts()));
         } catch (Exception $e) {
             print_r($e);
         }
+    }
+
+    /**
+     * @param  bool  $onlyWithText
+     * @return array
+     * @throws VKApiBlockedException
+     * @throws VKApiException
+     * @throws VKClientException
+     */
+    private function getPosts(bool $onlyWithText = true): array
+    {
+        $posts = $this->vk->wall()->get(
+            $_ENV['SERVICE_KEY'],
+            ['domain' => 'jumoreski', 'count' => 100, 'filter' => 'owner']
+        );
+        if ($onlyWithText) {
+            return array_filter($posts['items'], static fn($post) => $post['text'] !== '');
+        }
+        return $posts;
     }
 }
