@@ -23,10 +23,32 @@ class Core
     {
         $this->vk = new VKApiClient();
         try {
-            print_r($this->getRandomPost('jumoreski')['text']);
+            $post = $this->getRandomPost('jumoreski');
+            echo '<pre>';
+            print_r($post['text']);
+            echo '<pre>';
+            foreach ($this->getImages($post) as $url){
+                echo '<img src="'.$url.'"/>';
+            }
         } catch (Exception $e) {
             print_r($e);
         }
+    }
+
+    private function getImages(array $post){
+        $images = array_filter($post['attachments'], fn ($attachment) => $attachment['type'] === 'photo');
+        $urls = [];
+        foreach ($images as $image){
+            $sizes = $image['photo']['sizes'];
+            $maxSize = null;
+            foreach ($sizes as $size){
+                if($maxSize === null || $size['width'] > $maxSize['width']){
+                    $maxSize = $size;
+                }
+            }
+            $urls[] = $maxSize['url'];
+        }
+        return $urls;
     }
 
     /**
