@@ -40,6 +40,9 @@ class Core
 
     private function getImages(array $post): array
     {
+        if(!array_key_exists('attachments', $post)){
+            return [];
+        }
         $images = array_filter($post['attachments'], static fn($attachment) => $attachment['type'] === 'photo');
         $urls = [];
         foreach ($images as $image) {
